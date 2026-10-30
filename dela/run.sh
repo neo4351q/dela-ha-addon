@@ -9,14 +9,16 @@ else
 fi
 export DELA_ADMIN_EMAIL
 
-# Постоянная папка для базы данных (хранится в /addon_configs и попадает в бэкапы HA).
+# Постоянная папка для базы данных (в контейнере это /config).
 DELA_DATA_DIR="/config"
 export DELA_DATA_DIR
-chmod 777 /config 2>/dev/null || true
 
-# Убеждаемся, что папка для данных существует.
+# СНАЧАЛА создаем папку, если её нет.
 mkdir -p "${DELA_DATA_DIR}"
 
-# Запускаем сервер Dela той же командой, что и оригинальный образ (от пользователя node).
+# ТЕПЕРЬ выдаем права (так как мы работаем от root, даем полные права).
+chmod 777 "${DELA_DATA_DIR}"
+
+# Запускаем сервер Dela.
 cd /app || exit 1
 exec node --disable-warning=ExperimentalWarning apps/server/src/main.ts
