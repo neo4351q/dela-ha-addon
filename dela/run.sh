@@ -21,4 +21,9 @@ mkdir -p /data
 
 # Запускаем сервер
 cd /app || exit 1
+env | sort
+# Проверка доступа к /data
+echo "=== Проверка /data ==="
+touch /data/test_write && echo "УСПЕХ: /data доступна для записи" || echo "ОШИБКА: /data НЕ доступна для записи"
+rm -f /data/test_write
 exec node --disable-warning=ExperimentalWarning apps/server/src/main.ts
