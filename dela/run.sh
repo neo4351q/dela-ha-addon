@@ -1,0 +1,17 @@
+#!/usr/bin/with-contenv bashio
+# run.sh — точка входа аддона Dela для Home Assistant.
+
+# Получаем admin_email из конфигурации Home Assistant.
+DELA_ADMIN_EMAIL="$(bashio::config 'admin_email')"
+export DELA_ADMIN_EMAIL
+
+# Постоянная папка для базы данных (хранится в /addon_configs и попадает в бэкапы HA).
+DELA_DATA_DIR="/addon_configs/dela"
+export DELA_DATA_DIR
+
+# Убеждаемся, что папка для данных существует.
+mkdir -p "${DELA_DATA_DIR}"
+
+# Запускаем сервер Dela той же командой, что и оригинальный образ.
+cd /app || exit 1
+exec node --disable-warning=ExperimentalWarning apps/server/src/main.ts
