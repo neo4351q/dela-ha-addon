@@ -10,8 +10,9 @@ fi
 export DELA_ADMIN_EMAIL
 
 # Постоянная папка для базы данных (хранится в /addon_configs и попадает в бэкапы HA).
-DELA_DATA_DIR="/addon_configs/dela"
+DELA_DATA_DIR="/config"
 export DELA_DATA_DIR
+chmod 777 /config 2>/dev/null || true
 
 # Убеждаемся, что папка для данных существует.
 mkdir -p "${DELA_DATA_DIR}"
