@@ -1,0 +1,22 @@
+name: Dela
+version: "1.1.9"
+slug: dela
+description: Open-source task manager with end-to-end encryption
+url: https://github.com/olerast67/dela
+arch:
+  - aarch64
+  - amd64
+startup: application
+boot: auto
+ports:
+  8080/tcp: 8080
+ports_description:
+  8080/tcp: Web interface
+map:
+  - addon_config:rw
+options:
+  admin_email: ""
+  public_url: ""
+schema:
+  admin_email: email
+  public_url: "str?"
