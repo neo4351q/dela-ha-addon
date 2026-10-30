@@ -1,7 +1,8 @@
 #!/bin/sh
 # run.sh - точка входа аддона Dela для Home Assistant.
+set -e
 
-# Получаем admin_email из конфигурации HA
+# Получаем admin_email из конфигурации Home Assistant (/data/options.json).
 if [ -f /data/options.json ]; then
     DELA_ADMIN_EMAIL="$(node -e 'console.log(require("/data/options.json").admin_email || "")')"
 else
@@ -9,21 +10,14 @@ else
 fi
 export DELA_ADMIN_EMAIL
 
-# Указываем Dela использовать папку /data (она всегда доступна для записи в HA).
-# Пробуем все возможные имена переменных, которые может читать config.ts.
-export DATA_DIR="/data"
-export DELA_DATA_DIR="/data"
-export DB_PATH="/data/dela.db"
-export DELA_DB_PATH="/data/dela.db"
+# Папка данных. /data — стандартная постоянная папка аддона Home Assistant:
+# её монтирует HA, она доступна для записи (аддон работает от root) и попадает в бэкапы.
+DELA_DATA_DIR="/data"
+export DELA_DATA_DIR
 
-# На всякий случай создаем папку (хотя она уже создана в Dockerfile)
-mkdir -p /data
+# Создаём папку на случай, если её ещё нет.
+mkdir -p "${DELA_DATA_DIR}"
 
-# Запускаем сервер
-cd /app || exit 1
-env | sort
-# Проверка доступа к /data
-echo "=== Проверка /data ==="
-touch /data/test_write && echo "УСПЕХ: /data доступна для записи" || echo "ОШИБКА: /data НЕ доступна для записи"
-rm -f /data/test_write
+# Запускаем сервер Dela той же командой, что и оригинальный образ.
+cd /app
 exec node --disable-warning=ExperimentalWarning apps/server/src/main.ts
