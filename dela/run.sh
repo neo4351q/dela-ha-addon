@@ -9,13 +9,15 @@ else
 fi
 export DELA_ADMIN_EMAIL
 
-# Используем папку /data/dela внутри контейнера. 
-# Она всегда доступна для записи, и мы точно избежим проблем с правами.
-DELA_DATA_DIR="/data/dela"
-export DELA_DATA_DIR
+# Указываем Dela использовать папку /data (она всегда доступна для записи в HA).
+# Пробуем все возможные имена переменных, которые может читать config.ts.
+export DATA_DIR="/data"
+export DELA_DATA_DIR="/data"
+export DB_PATH="/data/dela.db"
+export DELA_DB_PATH="/data/dela.db"
 
-# Создаем папку, если её нет
-mkdir -p "${DELA_DATA_DIR}"
+# На всякий случай создаем папку (хотя она уже создана в Dockerfile)
+mkdir -p /data
 
 # Запускаем сервер
 cd /app || exit 1
