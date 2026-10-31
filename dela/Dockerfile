@@ -9,5 +9,9 @@ USER root
 COPY run.sh /run.sh
 RUN chmod a+x /run.sh
 
+# Добавляем логирование всех ошибок (не только 500) в лог аддона.
+COPY patch-logging.cjs /tmp/patch-logging.cjs
+RUN node /tmp/patch-logging.cjs && rm -f /tmp/patch-logging.cjs
+
 # Запускаем аддон через наш скрипт.
 CMD ["/run.sh"]

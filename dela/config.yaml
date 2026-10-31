@@ -16,5 +16,5 @@ options:
   admin_email: ""
   public_url: ""
 schema:
-  admin_email: email
+  admin_email: email?
   public_url: "str?"
