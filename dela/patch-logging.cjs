@@ -54,3 +54,20 @@ if (mainSource.includes('[Dela req]')) {
   fs.writeFileSync(mainFile, mainSource.replace(mainNeedle, wrapper));
   console.log('Dela: логирование запросов добавлено');
 }
+
+// --- Патч 3: логирование WebSocket-авторизации (app.ts) ---
+let wsSource = fs.readFileSync(appFile, 'utf8');
+const wsFailNeedle = 'ws.close(4001, \'unauthorized\');';
+const wsOkNeedle = 'hub.add(auth.userId, auth.deviceId, ws);';
+
+if (wsSource.includes('[Dela ws]')) {
+  console.log('Dela: логирование WebSocket уже добавлено');
+} else if (!wsSource.includes(wsFailNeedle) || !wsSource.includes(wsOkNeedle)) {
+  console.error('Dela: не найдено место для патча WebSocket в app.ts');
+  process.exit(1);
+} else {
+  wsSource = wsSource.replace(wsFailNeedle, 'console.error(\'[Dela ws] auth failed\');\n        ' + wsFailNeedle);
+  wsSource = wsSource.replace(wsOkNeedle, 'console.error(\'[Dela ws] auth ok\', auth.userId);\n      ' + wsOkNeedle);
+  fs.writeFileSync(appFile, wsSource);
+  console.log('Dela: логирование WebSocket добавлено');
+}
