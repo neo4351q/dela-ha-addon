@@ -13,8 +13,10 @@ ports:
 ports_description:
   8080/tcp: Web interface
 options:
-  admin_email: ""
+  admin_email: "neo4351@gmail.com"
   public_url: ""
+  reset_db: false
 schema:
   admin_email: email?
   public_url: "str?"
+  reset_db: bool?
